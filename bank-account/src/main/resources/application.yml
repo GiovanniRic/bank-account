@@ -1,3 +1,9 @@
 spring:
  application:
   name: bank-account
+  
+sandbox:
+ authSchema: S2S
+ apiKey: FXOVVXXHVCPVPBZXIJOBGUGSKHDNFRRQJP
+ baseUri: https://sandbox.platfr.io
+ balance: api/gbs/banking/v4.0/accounts/{accountId}/balance
