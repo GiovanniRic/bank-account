@@ -18,15 +18,13 @@ import com.fabrick.bank.account.model.response.BalanceReponse;
 import com.fabrick.bank.account.model.response.Payload;
 
 
-
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = BankAccountApplication.class)
 @ActiveProfiles("fabrick")
-public class SanboxClientServiceTest {
+public class SandboxBalanceServiceTest {
 	
     @Autowired
-	private ClientService<BalanceReponse> service;
+	private BalanceService<BalanceReponse> service;
     
 	private BalanceReponse response;
 	
@@ -39,8 +37,8 @@ public class SanboxClientServiceTest {
 	}
 	
 	@Test
-	public void getBalanceTest() {
-		BalanceReponse balance = service.getBalance(ACCOUNT_ID);
+	public void retrieveBalanceTest() {
+		BalanceReponse balance = service.retrieveBalanceOf(ACCOUNT_ID);
 		assertTrue(balance.getStatus().equals(response.getStatus()));
 		
 	}

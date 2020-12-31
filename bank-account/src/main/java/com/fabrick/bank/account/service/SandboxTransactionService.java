@@ -5,31 +5,26 @@ import org.springframework.stereotype.Service;
 
 import com.fabrick.bank.account.client.SandboxClient;
 import com.fabrick.bank.account.config.SanboxConfig;
-import com.fabrick.bank.account.model.response.BalanceReponse;
+import com.fabrick.bank.account.model.response.TransactionResponse;
 
 import feign.FeignException;
 
-@Service
-public class SanboxClientService implements ClientService<BalanceReponse> {
+@Service("SandboxTransactionService")
+public class SandboxTransactionService implements TransasctionService<TransactionResponse> {
 
 	@Autowired
 	private SanboxConfig sanboxConfig;
 
 	@Autowired
 	private SandboxClient client;
-	
-	@Autowired
-	public SanboxClientService(SandboxClient client) {
-		this.client = client;
-
-		
-	}
 
 	@Override
-	public BalanceReponse getBalance(String accountId) {
-		BalanceReponse response = null;
+	public TransactionResponse retrieveTransactions(String accountId, String dateFrom, String dateTo) {
+
+		TransactionResponse response = null;
 		try {
-			response = client.getBalance(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(), accountId);
+			response = client.getTransactions(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(), 
+					accountId, dateFrom, dateTo);
 		} catch (FeignException e) {
 			System.out.print(e.getMessage());
 			System.out.print(e.contentUTF8());

@@ -1,8 +1,5 @@
 package com.fabrick.bank.account.model.response;
 
-import lombok.Data;
-
-
 public class Payload {
 	
 	 private String date;

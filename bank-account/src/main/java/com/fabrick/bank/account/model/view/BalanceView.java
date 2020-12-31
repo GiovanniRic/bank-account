@@ -43,6 +43,7 @@ public class BalanceView {
 		this.date = date;
 	}
 	
+	@Override
 	public String toString() {
 		return "Bank account in date "+ date + ":\n"
 				+ "Balance: " + balance + " " + currency  + "\n"
