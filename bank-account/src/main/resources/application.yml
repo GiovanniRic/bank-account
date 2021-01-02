@@ -7,3 +7,5 @@ sandbox:
  apiKey: FXOVVXXHVCPVPBZXIJOBGUGSKHDNFRRQJP
  baseUri: https://sandbox.platfr.io
  balance: api/gbs/banking/v4.0/accounts/{accountId}/balance
+ transaction: /api/gbs/banking/v4.0/accounts/{accountId}/transactions?fromAccountingDate={dateFrom}1&toAccountingDate={dateTo}
+ moneyTransfer: /api/gbs/banking/v4.0/accounts/{accountId}/payments/money-transfers

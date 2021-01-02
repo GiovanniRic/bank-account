@@ -9,6 +9,11 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(prefix="sandbox")
 public class SanboxConfig {
+	
+	private String authSchema;
+	private String apiKey;
+	private String baseUri;
+	private String balance;
 
 	public String getAuthSchema() {
 		return authSchema;
@@ -34,9 +39,6 @@ public class SanboxConfig {
 	public void setBalance(String balance) {
 		this.balance = balance;
 	}
-	private String authSchema;
-	private String apiKey;
-	private String baseUri;
-	private String balance;
+
 
 }

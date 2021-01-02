@@ -1,22 +1,30 @@
 package com.fabrick.bank.account.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fabrick.bank.account.client.SandboxClient;
 import com.fabrick.bank.account.config.SanboxConfig;
 import com.fabrick.bank.account.model.response.BalanceReponse;
+import com.fabrick.bank.account.model.response.TransactionResponse;
+import com.fabrick.bank.account.model.view.BalanceView;
+import com.fabrick.bank.account.model.view.TransactionView;
+import com.google.gson.Gson;
 
 import feign.FeignException;
 
 @Service("SandboxBalanceService")
-public class SandboxBalanceService implements BalanceService<BalanceReponse> {
+public class SandboxBalanceService implements BalanceService<BalanceView> {
 
 	@Autowired
 	private SanboxConfig sanboxConfig;
 
 	@Autowired
 	private SandboxClient client;
+	
+	@Autowired
+	ModelMapper mapperBalance;
 	
 	@Autowired
 	public SandboxBalanceService(SandboxClient client) {
@@ -26,15 +34,18 @@ public class SandboxBalanceService implements BalanceService<BalanceReponse> {
 	}
 
 	@Override
-	public BalanceReponse retrieveBalanceOf(String accountId) {
+	public BalanceView retrieveBalanceOf(String accountId) {
 		
-		BalanceReponse response = null;
+		BalanceReponse balanceResponse = new BalanceReponse();
 		try {
-			response = client.getBalanceOf(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(), accountId);
+			balanceResponse = client.getBalanceOf(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(), accountId);
 		} catch (FeignException e) {
-			System.out.print(e.getMessage());
-			System.out.print(e.contentUTF8());
+			
+			Gson gson = new Gson();
+			balanceResponse = gson.fromJson(e.contentUTF8(), BalanceReponse.class);
+			return  mapperBalance.map(balanceResponse, BalanceView.class);
+			
 		}
-		return response;
+		return  mapperBalance.map(balanceResponse, BalanceView.class);
 	}
 }

@@ -2,9 +2,8 @@ package com.fabrick.bank.account.model.view;
 
 import java.util.List;
 
-public class TransactionView {
+public class TransactionView extends BaseView {
 
-	private String status;
 	private PayloadTransactionView payloadTransactionView;
 
 	public TransactionView() {
@@ -17,14 +16,6 @@ public class TransactionView {
 
 	public void setPayloadTransactionView(PayloadTransactionView payloadTransactionView) {
 		this.payloadTransactionView = payloadTransactionView;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 	public String getView() {

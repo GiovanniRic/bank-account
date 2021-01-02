@@ -8,27 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fabrick.bank.account.BankAccountApplication;
+import com.fabrick.bank.account.handler.DateTimeHandler;
 import com.fabrick.bank.account.model.command.CommandWrapper;
 import com.fabrick.bank.account.model.command.TypeCommand;
-import com.fabrick.bank.account.model.response.BalanceReponse;
-import com.fabrick.bank.account.model.response.Errors;
-import com.fabrick.bank.account.model.response.PayloadBalance;
-import com.fabrick.bank.account.model.response.PayloadTransaction;
-import com.fabrick.bank.account.model.response.TransactionResponse;
-import com.fabrick.bank.account.model.response.Operation;
 import com.fabrick.bank.account.model.view.BalanceView;
 import com.fabrick.bank.account.model.view.OperationView;
 import com.fabrick.bank.account.model.view.PayloadTransactionView;
@@ -36,24 +25,20 @@ import com.fabrick.bank.account.model.view.TransactionView;
 import com.fabrick.bank.account.service.BalanceService;
 import com.fabrick.bank.account.service.TransasctionService;
 
-@RunWith(SpringRunner.class)
+@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
 @SpringBootTest(classes = BankAccountApplication.class)
-@ActiveProfiles("fabrick")
 public class BankAccountControllerTest {
 
-	@Autowired
+	@InjectMocks
 	private BankAccountController controller;
 
-	@MockBean
-	private BalanceService<BalanceReponse> balanceService;
+	@Mock
+	private BalanceService<BalanceView> balanceService;
 
-	@MockBean
-	private TransasctionService<TransactionResponse> transactionService;
+	@Mock
+	private TransasctionService<TransactionView> transactionService;
 
-	private BalanceReponse responseBalance;
 	private BalanceView expectedBalance;
-
-	private TransactionResponse transactionResponse;
 	private TransactionView expectedTransactions;
 
 	private String ACCOUNT_ID = "14537780";
@@ -74,18 +59,15 @@ public class BankAccountControllerTest {
 
 		date = DateTimeHandler.getDateFormated(LocalDateTime.now());
 
-		responseBalance = getBalanceResponseMock();
-		transactionResponse = getTransactionResponseMock();
-
-		expectedBalance = getBalanceView();
-		expectedTransactions = getTransactionView();
+		expectedBalance = getBalanceViewExpeted();
+		expectedTransactions = getTransactionViewExpeted();
 
 	}
 
 	@Test
 	public void getBalanceTest() {
 
-		when(balanceService.retrieveBalanceOf(ACCOUNT_ID)).thenReturn(responseBalance);
+		when(balanceService.retrieveBalanceOf(ACCOUNT_ID)).thenReturn(expectedBalance);
 
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.READ, ACCOUNT_ID);
 		BalanceView balance = controller.readBankAccount(command);
@@ -96,7 +78,7 @@ public class BankAccountControllerTest {
 	@Test
 	public void getTransactionTest() {
 
-		when(transactionService.retrieveTransactions(ACCOUNT_ID, DATE_FROM, DATE_TO)).thenReturn(transactionResponse);
+		when(transactionService.retrieveTransactions(ACCOUNT_ID, DATE_FROM, DATE_TO)).thenReturn(expectedTransactions);
 
 		String command = ACCOUNT_ID + " " + DATE_FROM + " " + DATE_TO;
 		CommandWrapper commandWrapper = CommandWrapper.buildCommand(TypeCommand.TRANSACTIONS, command);
@@ -106,51 +88,7 @@ public class BankAccountControllerTest {
 
 	}
 
-	private BalanceReponse getBalanceResponseMock() {
-
-		BalanceReponse response = new BalanceReponse();
-		response.setStatus(STATUS_OK);
-
-		PayloadBalance payload = new PayloadBalance();
-		payload.setBalance(Float.parseFloat(BALANCE));
-		payload.setAvailableBalance(Float.parseFloat(BALANCE));
-		payload.setCurrency(CURRENCY);
-		payload.setDate(date);
-		response.setPayload(payload);
-
-		List<Errors> error = new ArrayList<>();
-		response.setError(error);
-
-		return response;
-	}
-
-	private TransactionResponse getTransactionResponseMock() {
-
-		TransactionResponse response = new TransactionResponse();
-
-		Operation operation = new Operation();
-		operation.setAmount(Float.parseFloat(AMOUNT_1));
-		operation.setCurrency(CURRENCY);
-		operation.setDescription(DESC_1);
-		operation.setValueDate(VALUE_DATE);
-		operation.setAccountingDate(ACCOUTING_DATE);
-
-		List<Operation> operations = new ArrayList<>();
-		operations.add(operation);
-
-		PayloadTransaction payload = new PayloadTransaction();
-		payload.setOperation(operations);
-
-		response.setStatus(STATUS_OK);
-		response.setPayload(payload);
-
-		List<Errors> error = new ArrayList<>();
-		response.setErrors(error);
-
-		return response;
-	}
-
-	private BalanceView getBalanceView() {
+	private BalanceView getBalanceViewExpeted() {
 		BalanceView balance = new BalanceView();
 		balance.setAvailableBalance(BALANCE);
 		balance.setBalance(BALANCE);
@@ -160,7 +98,7 @@ public class BankAccountControllerTest {
 		return balance;
 	}
 
-	private TransactionView getTransactionView() {
+	private TransactionView getTransactionViewExpeted() {
 		TransactionView transaction = new TransactionView();
 
 		transaction.setStatus(STATUS_OK);

@@ -1,16 +1,21 @@
 package com.fabrick.bank.account.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fabrick.bank.account.client.SandboxClient;
 import com.fabrick.bank.account.config.SanboxConfig;
+import com.fabrick.bank.account.model.response.MoneyTransferResponse;
 import com.fabrick.bank.account.model.response.TransactionResponse;
+import com.fabrick.bank.account.model.view.MoneyTransferView;
+import com.fabrick.bank.account.model.view.TransactionView;
+import com.google.gson.Gson;
 
 import feign.FeignException;
 
 @Service("SandboxTransactionService")
-public class SandboxTransactionService implements TransasctionService<TransactionResponse> {
+public class SandboxTransactionService implements TransasctionService<TransactionView> {
 
 	@Autowired
 	private SanboxConfig sanboxConfig;
@@ -18,17 +23,25 @@ public class SandboxTransactionService implements TransasctionService<Transactio
 	@Autowired
 	private SandboxClient client;
 
-	@Override
-	public TransactionResponse retrieveTransactions(String accountId, String dateFrom, String dateTo) {
+	@Autowired
+	ModelMapper mapperTransaction;
 
-		TransactionResponse response = null;
+	@Override
+	public TransactionView retrieveTransactions(String accountId, String dateFrom, String dateTo) {
+
+		TransactionResponse TransactionResponse = new TransactionResponse();
 		try {
-			response = client.getTransactions(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(), 
+			TransactionResponse = client.getTransactions(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(),
 					accountId, dateFrom, dateTo);
+
 		} catch (FeignException e) {
-			System.out.print(e.getMessage());
-			System.out.print(e.contentUTF8());
+
+			Gson gson = new Gson();
+			TransactionResponse = gson.fromJson(e.contentUTF8(), TransactionResponse.class);
+			return mapperTransaction.map(TransactionResponse, TransactionView.class);
 		}
-		return response;
+
+		return mapperTransaction.map(TransactionResponse, TransactionView.class);
+
 	}
 }

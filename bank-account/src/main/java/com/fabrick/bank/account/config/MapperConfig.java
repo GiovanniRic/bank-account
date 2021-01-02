@@ -26,6 +26,15 @@ public class MapperConfig {
 	public ModelMapper mapperBalance() {
 
 		ModelMapper modelMapper = new ModelMapper();
+
+		TypeMap<Errors, ErrorView> typeMapError = modelMapper.createTypeMap(Errors.class, ErrorView.class);
+
+		typeMapError.addMappings(mapper -> {
+			mapper.map(src -> src.getCode(), ErrorView::setCode);
+			mapper.map(src -> src.getDescription(), ErrorView::setDescription);
+			mapper.map(src -> src.getParams(), ErrorView::setParams);
+		});
+
 		TypeMap<BalanceReponse, BalanceView> typeMap = modelMapper.createTypeMap(BalanceReponse.class,
 				BalanceView.class);
 
@@ -34,6 +43,8 @@ public class MapperConfig {
 			mapper.map(src -> src.getPayload().getAvailableBalance(), BalanceView::setAvailableBalance);
 			mapper.map(src -> src.getPayload().getDate(), BalanceView::setDate);
 			mapper.map(src -> src.getPayload().getCurrency(), BalanceView::setCurrency);
+			mapper.map(src -> src.getStatus(), BalanceView::setStatus);
+			mapper.map(src -> src.getErrors(), BalanceView::setErrors);
 		});
 
 		return modelMapper;
@@ -43,6 +54,14 @@ public class MapperConfig {
 	public ModelMapper mapperTransaction() {
 
 		ModelMapper modelMapper = new ModelMapper();
+
+		TypeMap<Errors, ErrorView> typeMapError = modelMapper.createTypeMap(Errors.class, ErrorView.class);
+
+		typeMapError.addMappings(mapper -> {
+			mapper.map(src -> src.getCode(), ErrorView::setCode);
+			mapper.map(src -> src.getDescription(), ErrorView::setDescription);
+			mapper.map(src -> src.getParams(), ErrorView::setParams);
+		});
 
 		TypeMap<Operation, OperationView> typeMapOperation = modelMapper.createTypeMap(Operation.class,
 				OperationView.class);
@@ -69,6 +88,7 @@ public class MapperConfig {
 
 		typeMapTransaction.addMappings(mapper -> {
 			mapper.map(src -> src.getStatus(), TransactionView::setStatus);
+			mapper.map(src -> src.getErrors(), TransactionView::setErrors);
 			mapper.map(src -> src.getPayload(), TransactionView::setPayloadTransactionView);
 
 		});

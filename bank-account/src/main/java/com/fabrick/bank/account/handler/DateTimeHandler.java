@@ -1,4 +1,4 @@
-package com.fabrick.bank.account.controller;
+package com.fabrick.bank.account.handler;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

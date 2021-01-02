@@ -35,4 +35,11 @@ public class ErrorView {
 		this.params = params;
 	}
 	
+	 @Override
+	 public String toString() {
+		 return "Code: "+ code + "\n"
+				 + "message -->" + description + "\n"; 
+		 	 }
+	 
+	
 }

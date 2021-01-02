@@ -13,19 +13,20 @@ import com.fabrick.bank.account.model.response.BalanceReponse;
 import com.fabrick.bank.account.model.response.MoneyTransferResponse;
 import com.fabrick.bank.account.model.response.TransactionResponse;
 
-@FeignClient(name = "sandbox", url = "https://sandbox.platfr.io")
+
+@FeignClient(name = "sandbox", url = "${sandbox.baseUri}")
 public interface SandboxClient {
 
-	@GetMapping(value = "/api/gbs/banking/v4.0/accounts/{accountId}/balance")
+	@GetMapping(value = "/${sandbox.balance}")
 	public BalanceReponse getBalanceOf(@RequestHeader("Api-Key") String apiKey,
 			@RequestHeader("Auth-Schema") String autSchema, @PathVariable("accountId") String accountId);
 
-	@GetMapping(value = "/api/gbs/banking/v4.0/accounts/{accountId}/transactions?fromAccountingDate={dateFrom}&toAccountingDate={dateTo}")
+	@GetMapping(value = "${sandbox.transaction}")
 	public TransactionResponse getTransactions(@RequestHeader("Api-Key") String apiKey,
 			@RequestHeader("Auth-Schema") String autSchema, @PathVariable("accountId") String accountId,
 			@RequestParam("dateFrom") String dateFrom, @RequestParam("dateTo") String dateTo);
 
-	@PostMapping(value = "/api/gbs/banking/v4.0/accounts/{accountId}/payments/money-transfers")
+	@PostMapping(value = "${sandbox.moneyTransfer}")
 	public MoneyTransferResponse createMoneyTransfer(@RequestHeader("Api-Key") String apiKey,
 			@RequestHeader("Auth-Schema") String autSchema, @PathVariable("accountId") String accountId,
 			@RequestBody MoneyTransferRequest request);
