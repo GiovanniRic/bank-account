@@ -11,10 +11,11 @@ import com.fabrick.bank.account.controller.BankAccountController;
 import com.fabrick.bank.account.model.command.CommandWrapper;
 import com.fabrick.bank.account.model.command.TypeCommand;
 import com.fabrick.bank.account.model.view.BalanceView;
+import com.fabrick.bank.account.model.view.MoneyTransferView;
 import com.fabrick.bank.account.model.view.TransactionView;
 
 @Component
-@Profile("application")
+//@Profile("application")
 public class MyRunner implements CommandLineRunner {
 
 	@Autowired
@@ -42,11 +43,14 @@ public class MyRunner implements CommandLineRunner {
 			manageReadAccount();
 		} else if (input.equals("2")){
 			manageReadTransaction();
+		} else if (input.equals("3")){
+			manageCreateMoneyTransfer();
 		}
+		
 	}
 
 	private void manageReadAccount() {
-		System.out.print("Digit yuor accountId:");
+		System.out.print("Type yuor accountId:");
 		String input = readInput();
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.READ, input);
 		BalanceView balance = bankAccountController.readBankAccount(command);
@@ -57,13 +61,13 @@ public class MyRunner implements CommandLineRunner {
 	
 	private void manageReadTransaction() {
 		
-		System.out.print("Digit yuor accountId:");
+		System.out.print("Type yuor accountId:");
 		String input = readInput();
 		String commandFinal = input;
 		
 		System.out.println();
 		
-		System.out.println("Digit period date (format yyyy-mm-dd)");
+		System.out.println("Type period date (format yyyy-mm-dd)");
 		System.out.print("From:");
 		
 	     input = readInput();
@@ -81,6 +85,51 @@ public class MyRunner implements CommandLineRunner {
 	     
 	     
 	}
+	
+	private void manageCreateMoneyTransfer() {
+		
+		System.out.print("Type yuor accountId:");
+		String input = readInput();
+		String commandFinal = input;
+		
+		System.out.println();
+		
+		System.out.print("Type beneficiary name:");
+	     input = readInput();
+	     commandFinal += " " + input;
+		System.out.println();
+		
+		System.out.print("Type beneficiary surname:");
+	     input = readInput();
+	     commandFinal += " " + input;
+		System.out.println();
+		
+		System.out.print("Type IBAN beneficiary:");
+	     input = readInput();
+	     commandFinal += " " + input;
+		System.out.println();
+		
+		
+		System.out.print("Type description:");
+	     input = readInput();
+	     commandFinal += " " + input;
+		System.out.println();
+		
+		System.out.print("Type amount:");
+	     input = readInput();
+	     commandFinal += " " + input;
+		System.out.println();
+	     
+	     
+		
+	     CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSFER, commandFinal);
+	     MoneyTransferView createTransfer = bankAccountController.createTransfer(command);
+	     
+	     
+	     
+	     
+	}
+
 
 	private String readInput() {
 		return new Scanner(System.in).nextLine();

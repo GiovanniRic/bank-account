@@ -1,13 +1,13 @@
 package com.fabrick.bank.account.model.response;
 
-public class Payload {
+public class PayloadBalance {
 	
 	 private String date;
 	 private float balance;
 	 private float availableBalance;
 	 private String currency;
 	 
-	 public Payload() {
+	 public PayloadBalance() {
 		 
 	 }
 

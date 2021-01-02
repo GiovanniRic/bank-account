@@ -9,8 +9,8 @@ import lombok.Setter;
 
 public class BalanceReponse {
 	private String status;
-	private List<Object> error;
-	private Payload payload;
+	private List<Errors> error;
+	private PayloadBalance payload;
 	
 	public BalanceReponse() {}
 	
@@ -22,19 +22,19 @@ public class BalanceReponse {
 		this.status = status;
 	}
 
-	public List<Object> getError() {
+	public List<Errors> getError() {
 		return error;
 	}
 
-	public void setError(List<Object> error) {
+	public void setError(List<Errors> error) {
 		this.error = error;
 	}
 
-	public Payload getPayload() {
+	public PayloadBalance getPayload() {
 		return payload;
 	}
 
-	public void setPayload(Payload payload) {
+	public void setPayload(PayloadBalance payload) {
 		this.payload = payload;
 	}
 }

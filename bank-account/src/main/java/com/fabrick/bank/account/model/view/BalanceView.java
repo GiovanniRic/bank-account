@@ -1,11 +1,15 @@
 package com.fabrick.bank.account.model.view;
 
+import java.util.List;
+
 public class BalanceView {
 	
 	private String balance;
 	private String availableBalance;
 	private String currency;
 	private String date;
+	private String Status;
+	private List<ErrorView> errors;
 	
 	public BalanceView() {
 		
@@ -43,6 +47,22 @@ public class BalanceView {
 		this.date = date;
 	}
 	
+	public String getStatus() {
+		return Status;
+	}
+
+	public void setStatus(String status) {
+		Status = status;
+	}
+
+	public List<ErrorView> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<ErrorView> errors) {
+		this.errors = errors;
+	}
+
 	@Override
 	public String toString() {
 		return "Bank account in date "+ date + ":\n"

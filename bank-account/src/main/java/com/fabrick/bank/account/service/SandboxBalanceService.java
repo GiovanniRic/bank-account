@@ -22,7 +22,7 @@ public class SandboxBalanceService implements BalanceService<BalanceReponse> {
 	public SandboxBalanceService(SandboxClient client) {
 		this.client = client;
 
-		
+
 	}
 
 	@Override

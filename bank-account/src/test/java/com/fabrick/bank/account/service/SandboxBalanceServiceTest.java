@@ -15,7 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fabrick.bank.account.BankAccountApplication;
 import com.fabrick.bank.account.model.response.BalanceReponse;
-import com.fabrick.bank.account.model.response.Payload;
+import com.fabrick.bank.account.model.response.Errors;
+import com.fabrick.bank.account.model.response.PayloadBalance;
 
 
 @RunWith(SpringRunner.class)
@@ -46,11 +47,11 @@ public class SandboxBalanceServiceTest {
 	private BalanceReponse getBalanceResponseMock() {
 		BalanceReponse response = new BalanceReponse();
 		
-		Payload payload = new Payload();
+		PayloadBalance payload = new PayloadBalance();
 		response.setStatus("OK");
 		response.setPayload(payload);
 		
-		List<Object> error = new ArrayList<>();
+		List<Errors> error = new ArrayList<>();
 		response.setError(error);
 		
 		return response;	

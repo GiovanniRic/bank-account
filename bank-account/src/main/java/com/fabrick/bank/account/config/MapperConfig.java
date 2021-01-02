@@ -6,13 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fabrick.bank.account.model.response.BalanceReponse;
+import com.fabrick.bank.account.model.response.Errors;
+import com.fabrick.bank.account.model.response.MoneyTransferResponse;
+import com.fabrick.bank.account.model.response.Operation;
 import com.fabrick.bank.account.model.response.PayloadTransaction;
 import com.fabrick.bank.account.model.response.TransactionResponse;
-import com.fabrick.bank.account.model.response.Operation;
 import com.fabrick.bank.account.model.view.BalanceView;
+import com.fabrick.bank.account.model.view.ErrorView;
+import com.fabrick.bank.account.model.view.MoneyTransferView;
 import com.fabrick.bank.account.model.view.OperationView;
 import com.fabrick.bank.account.model.view.PayloadTransactionView;
 import com.fabrick.bank.account.model.view.TransactionView;
+import com.google.gson.Gson;
 
 @Configuration
 public class MapperConfig {
@@ -70,4 +75,31 @@ public class MapperConfig {
 
 		return modelMapper;
 	}
+
+	@Bean
+	public ModelMapper mapperMoneyTransfer() {
+
+		ModelMapper modelMapper = new ModelMapper();
+
+		TypeMap<Errors, ErrorView> typeMapError = modelMapper.createTypeMap(Errors.class, ErrorView.class);
+
+		typeMapError.addMappings(mapper -> {
+			mapper.map(src -> src.getCode(), ErrorView::setCode);
+			mapper.map(src -> src.getDescription(), ErrorView::setDescription);
+			mapper.map(src -> src.getParams(), ErrorView::setParams);
+
+		});
+
+		TypeMap<MoneyTransferResponse, MoneyTransferView> typeMap = modelMapper
+				.createTypeMap(MoneyTransferResponse.class, MoneyTransferView.class);
+
+		typeMap.addMappings(mapper -> {
+			mapper.map(src -> src.getStatus(), MoneyTransferView::setStatus);
+			mapper.map(src -> src.getErrors(), MoneyTransferView::setErrors);
+		});
+
+		return modelMapper;
+
+	}
+
 }

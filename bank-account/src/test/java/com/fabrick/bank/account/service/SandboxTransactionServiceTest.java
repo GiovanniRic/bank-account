@@ -14,6 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fabrick.bank.account.BankAccountApplication;
+import com.fabrick.bank.account.model.response.Errors;
 import com.fabrick.bank.account.model.response.PayloadTransaction;
 import com.fabrick.bank.account.model.response.TransactionResponse;
 
@@ -51,8 +52,8 @@ public class SandboxTransactionServiceTest {
 		response.setStatus("OK");
 		response.setPayload(payload);
 		
-		List<Object> error = new ArrayList<>();
-		response.setError(error);
+		List<Errors> error = new ArrayList<>();
+		response.setErrors(error);
 		
 		return response;	
 	}

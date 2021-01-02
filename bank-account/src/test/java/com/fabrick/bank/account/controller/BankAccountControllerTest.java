@@ -24,7 +24,8 @@ import com.fabrick.bank.account.BankAccountApplication;
 import com.fabrick.bank.account.model.command.CommandWrapper;
 import com.fabrick.bank.account.model.command.TypeCommand;
 import com.fabrick.bank.account.model.response.BalanceReponse;
-import com.fabrick.bank.account.model.response.Payload;
+import com.fabrick.bank.account.model.response.Errors;
+import com.fabrick.bank.account.model.response.PayloadBalance;
 import com.fabrick.bank.account.model.response.PayloadTransaction;
 import com.fabrick.bank.account.model.response.TransactionResponse;
 import com.fabrick.bank.account.model.response.Operation;
@@ -110,14 +111,14 @@ public class BankAccountControllerTest {
 		BalanceReponse response = new BalanceReponse();
 		response.setStatus(STATUS_OK);
 
-		Payload payload = new Payload();
+		PayloadBalance payload = new PayloadBalance();
 		payload.setBalance(Float.parseFloat(BALANCE));
 		payload.setAvailableBalance(Float.parseFloat(BALANCE));
 		payload.setCurrency(CURRENCY);
 		payload.setDate(date);
 		response.setPayload(payload);
 
-		List<Object> error = new ArrayList<>();
+		List<Errors> error = new ArrayList<>();
 		response.setError(error);
 
 		return response;
@@ -143,8 +144,8 @@ public class BankAccountControllerTest {
 		response.setStatus(STATUS_OK);
 		response.setPayload(payload);
 
-		List<Object> error = new ArrayList<>();
-		response.setError(error);
+		List<Errors> error = new ArrayList<>();
+		response.setErrors(error);
 
 		return response;
 	}

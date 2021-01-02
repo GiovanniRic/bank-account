@@ -6,7 +6,7 @@ import java.util.List;
 public class TransactionResponse{
 	
     private String status;
-    private List<Object> error;
+    private List<Errors> errors;
     private PayloadTransaction payload;
     
     public TransactionResponse() {
@@ -21,19 +21,19 @@ public class TransactionResponse{
 		this.status = status;
 	}
 
-	public List<Object> getError() {
-		return error;
-	}
-
-	public void setError(List<Object> error) {
-		this.error = error;
-	}
-
 	public PayloadTransaction getPayload() {
 		return payload;
 	}
 
 	public void setPayload(PayloadTransaction payload) {
 		this.payload = payload;
+	}
+
+	public List<Errors> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<Errors> errors) {
+		this.errors = errors;
 	}
 }

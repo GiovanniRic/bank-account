@@ -32,7 +32,9 @@ public class TransactionView {
 
 		String operationsString = new String();
 		for (OperationView operationView : operations) {
+			operationsString += "------ \n";
 			operationsString += operationView.toString();
+			operationsString += "------ \n";
 		}
 
 		return operationsString;
