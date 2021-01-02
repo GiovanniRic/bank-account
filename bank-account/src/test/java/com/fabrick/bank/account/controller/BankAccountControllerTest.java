@@ -2,6 +2,7 @@ package com.fabrick.bank.account.controller;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import com.fabrick.bank.account.model.view.TransactionView;
 import com.fabrick.bank.account.service.BalanceService;
 import com.fabrick.bank.account.service.TransasctionService;
 
-@RunWith(org.mockito.junit.MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest(classes = BankAccountApplication.class)
 public class BankAccountControllerTest {
 

@@ -39,13 +39,7 @@ public class SandboxBalanceServiceTest {
 
 	private String ACCOUNT_ID = "14537780";
 	private String BALANCE = "10.89";
-	private String AMOUNT_1 = "20.0";
 	private String CURRENCY = "EUR";
-	private String DATE_FROM = "2019-01-01";
-	private String DATE_TO = "2019-12-01";
-	private String ACCOUTING_DATE = "2020-11-12";
-	private String VALUE_DATE = "2020-11-11";
-	private String DESC_1 = "Desc1";
 	private String STATUS_OK = "OK";
 	private String DATE_BALANCE = "2021-01-01";
 
