@@ -1,6 +1,8 @@
 package com.fabrick.bank.account.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import com.fabrick.bank.account.model.MoneyTransferData;
 import com.fabrick.bank.account.model.request.Account;
 import com.fabrick.bank.account.model.request.Creditor;
 import com.fabrick.bank.account.model.request.MoneyTransferRequest;
+import com.fabrick.bank.account.model.response.Errors;
 import com.fabrick.bank.account.model.response.MoneyTransferResponse;
 import com.fabrick.bank.account.model.view.MoneyTransferView;
 import com.google.gson.Gson;
@@ -27,10 +30,9 @@ public class SandnoxMoneyTransferService implements MoneyTransferService<MoneyTr
 
 	@Autowired
 	private SandboxClient client;
-	
+
 	@Autowired
 	private ModelMapper mapperMoneyTransfer;
-
 
 	@Override
 	public MoneyTransferView createMoneyTransferFrom(MoneyTransferData moneyTransferData) {
@@ -38,19 +40,25 @@ public class SandnoxMoneyTransferService implements MoneyTransferService<MoneyTr
 		MoneyTransferRequest request = new MoneyTransferRequest();
 		request = buildMoneyTransferRequestFrom(moneyTransferData);
 
-		MoneyTransferResponse createMoneyTransfer = new MoneyTransferResponse();
+		MoneyTransferResponse createMoneyTransferResponse = new MoneyTransferResponse();
 		try {
-			createMoneyTransfer = client.createMoneyTransfer(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(),
-					moneyTransferData.getAcccountId(), request);
+			createMoneyTransferResponse = client.createMoneyTransfer(sanboxConfig.getApiKey(),
+					sanboxConfig.getAuthSchema(), moneyTransferData.getAcccountId(), request);
 
-		} catch (FeignException e) {	
+		} catch (FeignException e) {
 			Gson gson = new Gson();
-			createMoneyTransfer = gson.fromJson(e.contentUTF8(), MoneyTransferResponse.class);
-			return  mapperMoneyTransfer.map(createMoneyTransfer, MoneyTransferView.class);
-			
+
+			createMoneyTransferResponse = gson.fromJson(e.contentUTF8(), MoneyTransferResponse.class);
+
+			if (createMoneyTransferResponse == null) {
+				return getErrorGeneric();
+			}
+
+			return mapperMoneyTransfer.map(createMoneyTransferResponse, MoneyTransferView.class);
+
 		}
-		return  mapperMoneyTransfer.map(createMoneyTransfer, MoneyTransferView.class);
-        
+		return mapperMoneyTransfer.map(createMoneyTransferResponse, MoneyTransferView.class);
+
 	}
 
 	private MoneyTransferRequest buildMoneyTransferRequestFrom(MoneyTransferData moneyTransferData) {
@@ -59,7 +67,7 @@ public class SandnoxMoneyTransferService implements MoneyTransferService<MoneyTr
 		request.setAmount(Integer.valueOf(moneyTransferData.getAcccountId()).intValue());
 		request.setDescription(moneyTransferData.getDescription());
 		request.setCurrency("EUR");
-        request.setExecutionDate(DateTimeHandler.getDateFormated(LocalDateTime.now()));
+		request.setExecutionDate(DateTimeHandler.getDateFormated(LocalDateTime.now()));
 		Creditor creditor = new Creditor();
 		String name = moneyTransferData.getName() + " " + moneyTransferData.getSurname();
 		creditor.setName(name);
@@ -72,6 +80,18 @@ public class SandnoxMoneyTransferService implements MoneyTransferService<MoneyTr
 
 		return request;
 
+	}
+
+	private MoneyTransferView getErrorGeneric() {
+		MoneyTransferResponse moneyTransferResponse = new MoneyTransferResponse();
+		moneyTransferResponse.setStatus("KO");
+		Errors error = new Errors();
+		error.setCode("NA");
+		error.setDescription("Generic error");
+		List<Errors> errors = new ArrayList<>();
+		errors.add(error);
+		moneyTransferResponse.setErrors(errors);
+		return mapperMoneyTransfer.map(moneyTransferResponse, MoneyTransferView.class);
 	}
 
 }

@@ -15,9 +15,9 @@ public class BankAccountApplication {
 	
 
 	public static void main(String[] args) {
-		SpringApplication.run(BankAccountApplication.class, args);
-//		SpringApplication app = new SpringApplication(BankAccountApplication.class);
-//		app.setAdditionalProfiles("application");
-//		app.run();
+		//SpringApplication.run(BankAccountApplication.class, args);
+		SpringApplication app = new SpringApplication(BankAccountApplication.class);
+		app.setAdditionalProfiles("application-runner");
+		app.run();
 	}
 }

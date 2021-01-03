@@ -9,3 +9,11 @@ sandbox:
  balance: api/gbs/banking/v4.0/accounts/{accountId}/balance
  transaction: /api/gbs/banking/v4.0/accounts/{accountId}/transactions?fromAccountingDate={dateFrom}1&toAccountingDate={dateTo}
  moneyTransfer: /api/gbs/banking/v4.0/accounts/{accountId}/payments/money-transfers
+ 
+feign:
+ client:
+  config:
+   sandbox:
+    connectTimeout: 10000
+    readTimeout: 10000
+    loggerLevel: basic

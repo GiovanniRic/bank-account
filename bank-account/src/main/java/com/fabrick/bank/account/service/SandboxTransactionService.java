@@ -1,11 +1,15 @@
 package com.fabrick.bank.account.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fabrick.bank.account.client.SandboxClient;
 import com.fabrick.bank.account.config.SanboxConfig;
+import com.fabrick.bank.account.model.response.Errors;
 import com.fabrick.bank.account.model.response.MoneyTransferResponse;
 import com.fabrick.bank.account.model.response.TransactionResponse;
 import com.fabrick.bank.account.model.view.MoneyTransferView;
@@ -29,19 +33,37 @@ public class SandboxTransactionService implements TransasctionService<Transactio
 	@Override
 	public TransactionView retrieveTransactions(String accountId, String dateFrom, String dateTo) {
 
-		TransactionResponse TransactionResponse = new TransactionResponse();
+		TransactionResponse transactionResponse = new TransactionResponse();
 		try {
-			TransactionResponse = client.getTransactions(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(),
+			transactionResponse = client.getTransactions(sanboxConfig.getApiKey(), sanboxConfig.getAuthSchema(),
 					accountId, dateFrom, dateTo);
 
 		} catch (FeignException e) {
-
 			Gson gson = new Gson();
-			TransactionResponse = gson.fromJson(e.contentUTF8(), TransactionResponse.class);
-			return mapperTransaction.map(TransactionResponse, TransactionView.class);
+
+			transactionResponse = gson.fromJson(e.contentUTF8(), TransactionResponse.class);
+
+			if (transactionResponse == null) {
+				return getErrorGeneric();
+			}
+
+			return mapperTransaction.map(transactionResponse, TransactionView.class);
+
 		}
 
-		return mapperTransaction.map(TransactionResponse, TransactionView.class);
+		return mapperTransaction.map(transactionResponse, TransactionView.class);
 
+	}
+
+	private TransactionView getErrorGeneric() {
+		TransactionResponse moneyTransferResponse = new TransactionResponse();
+		moneyTransferResponse.setStatus("KO");
+		Errors error = new Errors();
+		error.setCode("NA");
+		error.setDescription("Generic error");
+		List<Errors> errors = new ArrayList<>();
+		errors.add(error);
+		moneyTransferResponse.setErrors(errors);
+		return mapperTransaction.map(moneyTransferResponse, TransactionView.class);
 	}
 }

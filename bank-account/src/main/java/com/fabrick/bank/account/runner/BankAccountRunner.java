@@ -1,4 +1,4 @@
-package com.fabrick.bank.account.config;
+package com.fabrick.bank.account.runner;
 
 import java.util.Scanner;
 
@@ -15,6 +15,7 @@ import com.fabrick.bank.account.model.view.MoneyTransferView;
 import com.fabrick.bank.account.model.view.TransactionView;
 
 @Component
+@Profile("application-runner")
 public class BankAccountRunner implements CommandLineRunner {
 
 	@Autowired
@@ -25,15 +26,25 @@ public class BankAccountRunner implements CommandLineRunner {
 
 		System.out.println("Welcome on Bank Account Application");
 		System.out.println();
+		boolean exit = false;
+		while (!exit) {
+			System.out.println("Chose operation:");
+			System.out.println("Read bank account -> Type 1");
+			System.out.println("View transactions -> Type 2");
+			System.out.println("Create money transfer -> Type 3");
+			System.out.println("Exit-> Type 0");
+			System.out.println();
+			System.out.print("Your choice:");
+			String input = readInput();
 
-		System.out.println("Chose operation:");
-		System.out.println("1 -> Read bank account");
-		System.out.println("2 -> View transactions");
-		System.out.println("3 -> Create money transfer");
+			if (input.equals("0")) {
+				exit = true;
+			}
 
-		System.out.print("--->");
-		String input = readInput();
-		manageInput(input);
+			manageInput(input);
+			System.out.println("---------------------------------------");
+		}
+
 	}
 
 	private void manageInput(String input) {
@@ -54,6 +65,8 @@ public class BankAccountRunner implements CommandLineRunner {
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.READ, input);
 		BalanceView balance = bankAccountController.readBankAccount(command);
 		System.out.println();
+
+		System.out.println("---------------------------------------");
 
 		if (balance.statusIsOk()) {
 			System.out.println(balance);
@@ -84,6 +97,8 @@ public class BankAccountRunner implements CommandLineRunner {
 		commandFinal += " " + input;
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSACTIONS, commandFinal);
 		TransactionView transactionView = bankAccountController.readTransactions(command);
+
+		System.out.println("---------------------------------------");
 
 		if (transactionView.statusIsOk()) {
 			System.out.println(transactionView.getView());
@@ -128,6 +143,8 @@ public class BankAccountRunner implements CommandLineRunner {
 
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSFER, commandFinal);
 		MoneyTransferView transferView = bankAccountController.createTransfer(command);
+
+		System.out.println("---------------------------------------");
 
 		if (transferView.statusIsOk()) {
 			System.out.println(transferView);

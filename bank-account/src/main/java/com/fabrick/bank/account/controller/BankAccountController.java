@@ -17,11 +17,9 @@ import com.fabrick.bank.account.service.TransasctionService;
 public class BankAccountController {
 
 	@Autowired
-	//@Qualifier("SandboxBalanceService")
 	private BalanceService<BalanceView> sanboxBalanceService;
 
 	@Autowired
-	@Qualifier("SandboxTransactionService")
 	private TransasctionService<TransactionView> sandboxTransactionsService;
 
 	@Autowired
