@@ -46,8 +46,8 @@ public class BankAccountControllerIntegrationTest {
 		balanceViewExpetedOK = getBalanceViewExpeted(STATUS_OK);
 		transactionViewExpetedOK = getTransactionViewExpeted(STATUS_OK);
 
-		balanceViewExpetedOK = getBalanceViewExpeted(STATUS_KO);
-		transactionViewExpetedOK = getTransactionViewExpeted(STATUS_KO);
+		balanceViewExpetedKO = getBalanceViewExpeted(STATUS_KO);
+		transactionViewExpetedKO = getTransactionViewExpeted(STATUS_KO);
 
 		date = DateTimeHandler.getDateFormated(LocalDateTime.now());
 
@@ -70,7 +70,7 @@ public class BankAccountControllerIntegrationTest {
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSACTIONS, commandString);
 		TransactionView view = controller.readTransactions(command);
 
-		assertTrue(view.getStatus().equals(balanceViewExpetedOK.getStatus()));
+		assertTrue(view.getStatus().equals(transactionViewExpetedOK.getStatus()));
 
 	}
 
@@ -91,7 +91,7 @@ public class BankAccountControllerIntegrationTest {
 		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSACTIONS, commandString);
 		TransactionView view = controller.readTransactions(command);
 
-		assertTrue(view.getStatus().equals(balanceViewExpetedKO.getStatus()));
+		assertTrue(view.getStatus().equals(transactionViewExpetedKO.getStatus()));
 
 	}
 
