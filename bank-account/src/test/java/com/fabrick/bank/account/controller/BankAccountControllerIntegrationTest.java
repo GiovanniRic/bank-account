@@ -17,6 +17,7 @@ import com.fabrick.bank.account.handler.DateTimeHandler;
 import com.fabrick.bank.account.model.command.CommandWrapper;
 import com.fabrick.bank.account.model.command.TypeCommand;
 import com.fabrick.bank.account.model.view.BalanceView;
+import com.fabrick.bank.account.model.view.MoneyTransferView;
 import com.fabrick.bank.account.model.view.TransactionView;
 
 @RunWith(SpringRunner.class)
@@ -35,19 +36,30 @@ public class BankAccountControllerIntegrationTest {
 	private String DATE_FROM = "2019-01-01";
 	private String DATE_TO = "2019-12-01";
 
+	private String NAME = "John";
+	private String SURNAME = "Doe";
+	private String IBAN = "IT23A0336844430152923804660";
+	private String DESCRIPTION = "Prova";
+	private String AMOUNT = "100";
+	private String CURRENCY = "EUR";
+
 	BalanceView balanceViewExpetedOK;
 	TransactionView transactionViewExpetedOK;
+	MoneyTransferView moneyTransferViewOK;
 
 	BalanceView balanceViewExpetedKO;
 	TransactionView transactionViewExpetedKO;
+	MoneyTransferView moneyTransferViewKO;
 
 	@Before
 	public void setUp() {
 		balanceViewExpetedOK = getBalanceViewExpeted(STATUS_OK);
 		transactionViewExpetedOK = getTransactionViewExpeted(STATUS_OK);
+		moneyTransferViewOK = getMoneyTransferViewExpeted(STATUS_OK);
 
 		balanceViewExpetedKO = getBalanceViewExpeted(STATUS_KO);
 		transactionViewExpetedKO = getTransactionViewExpeted(STATUS_KO);
+		moneyTransferViewKO = getMoneyTransferViewExpeted(STATUS_KO);
 
 		date = DateTimeHandler.getDateFormated(LocalDateTime.now());
 
@@ -95,11 +107,33 @@ public class BankAccountControllerIntegrationTest {
 
 	}
 
+	@Test
+	public void testMoneyTransferOK() {
+
+		String commandString = ACCOUNT_ID + " " + NAME + " " + SURNAME + " " + IBAN + " " + DESCRIPTION + " "
+				+ AMOUNT;
+		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSFER, commandString);
+		MoneyTransferView view = controller.createTransfer(command);
+
+		assertTrue(view.getStatus().equals(moneyTransferViewOK.getStatus()));
+
+	}
+
+	@Test
+	public void testMoneyTransferKO() {
+
+		String commandString = ACCOUNT_ID_BAD + " " + NAME + " " + SURNAME + " " + IBAN + " " + DESCRIPTION + " "
+				+ AMOUNT;
+		CommandWrapper command = CommandWrapper.buildCommand(TypeCommand.TRANSFER, commandString);
+		MoneyTransferView view = controller.createTransfer(command);
+
+		assertTrue(view.getStatus().equals(moneyTransferViewKO.getStatus()));
+
+	}
+
 	private TransactionView getTransactionViewExpeted(String status) {
 		TransactionView transaction = new TransactionView();
-
 		transaction.setStatus(status);
-
 		return transaction;
 	}
 
@@ -107,7 +141,12 @@ public class BankAccountControllerIntegrationTest {
 		BalanceView view = new BalanceView();
 		view.setDate(date);
 		view.setStatus(status);
+		return view;
+	}
 
+	private MoneyTransferView getMoneyTransferViewExpeted(String status) {
+		MoneyTransferView view = new MoneyTransferView();
+		view.setStatus(status);
 		return view;
 	}
 
